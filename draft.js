@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import Form from './components/Form'
-
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -58,17 +56,35 @@ const App = () => {
     setUser(null)
   }
 
+  const loginFormContainer = () => (
+    <div>
+      <h1>Login into the application</h1>
+      <form onSubmit={handleLogin}>
+        <div>
+          Username
+          <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={changeHandler}
+          />
+        </div>
+        <div>
+          password
+          <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={passChangeHandler}
+          />
+        </div>
+        <button type="submit">login</button>
+      </form>
+    </div>
+  )
+
   if (user === null) {
-    return (
-      <Form
-        handleLogin={handleLogin}
-        username={username}
-        changeHandler={changeHandler}
-        password={password}
-        passChangeHandler={passChangeHandler}
-        user={user}
-      />
-    )
+    return loginFormContainer()
   }
 
   return (
