@@ -1,0 +1,9 @@
+.successful {
+  color: green;
+  background-color: lightgray;
+}
+
+.unsuccessful {
+  color: red;
+  background-color: lightgray;
+}

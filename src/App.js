@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Form from './components/Form'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -16,7 +17,8 @@ const App = () => {
     author: '',
     url: '',
   })
-
+  const [notificationType, setNotificationType] = useState('')
+  const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -47,6 +49,7 @@ const App = () => {
       [event.target.name]: event.target.value,
     })
   }
+
   const addBlog = async (event) => {
     event.preventDefault()
 
@@ -60,6 +63,12 @@ const App = () => {
 
     const savedBlog = await blogService.create(blogObject)
     setBlogs(blogs.concat(savedBlog))
+
+    setNotification(`a new blog ${blogObject.title} by ${blogObject.author}`)
+    setNotificationType('successful')
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
 
     setState({ ...form, title: '', author: '', url: '' })
   }
@@ -76,16 +85,35 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
+
+      setNotification(`${user.name}, You've successfully logged in`)
+      setNotificationType('successful')
+
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.error('invalid login')
+      setNotification(`Wrong username or password`)
+      setNotificationType('unsuccessful')
+
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     }
   }
 
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('LoggedBloglistappUser')
+
+    setNotification(`You've successfully logout`)
+    setNotificationType('successful')
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+
     setUser(null)
   }
 
@@ -124,16 +152,20 @@ const App = () => {
   return (
     <div>
       {user === null ? (
-        <Form
-          handleLogin={handleLogin}
-          username={username}
-          changeHandler={changeHandler}
-          password={password}
-          passChangeHandler={passChangeHandler}
-        />
+        <div>
+          <Notification message={notification} type={notificationType} />
+          <Form
+            handleLogin={handleLogin}
+            username={username}
+            changeHandler={changeHandler}
+            password={password}
+            passChangeHandler={passChangeHandler}
+          />
+        </div>
       ) : (
         <div>
           <h2>blogs</h2>
+          <Notification message={notification} type={notificationType} />
           <p>
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
