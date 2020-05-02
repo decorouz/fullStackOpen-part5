@@ -1,24 +1,30 @@
 import React from 'react'
 
-const Form = (props) => {
+const LoginForm = ({
+  username,
+  password,
+  handleUsernameChange,
+  handlePasswordChange,
+  handleSubmit,
+}) => {
   const loginFormContainer = () => (
-    <form onSubmit={props.handleLogin}>
+    <form onSubmit={handleSubmit}>
       <div>
         Username
         <input
           type="text"
-          value={props.username}
+          value={username}
           name="Username"
-          onChange={props.changeHandler}
+          onChange={handleUsernameChange}
         />
       </div>
       <div>
         password
         <input
           type="password"
-          value={props.password}
+          value={password}
           name="Password"
-          onChange={props.passChangeHandler}
+          onChange={handlePasswordChange}
         />
       </div>
       <button type="submit">login</button>
@@ -27,10 +33,10 @@ const Form = (props) => {
 
   return (
     <div>
-      <h1>Login into the application</h1>
+      <h1>Log in to application</h1>
       {loginFormContainer()}
     </div>
   )
 }
 
-export default Form
+export default LoginForm
