@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const [blogFormVisible, setBlogFormVisible] = useState(false)
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -30,14 +30,24 @@ const App = () => {
   }, [])
 
   const addBlog = async (blogObject) => {
-    const savedBlog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(savedBlog))
+    blogFormRef.current.toggleVisibility()
+    try {
+      const savedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(savedBlog))
 
-    setNotification(`a new blog ${blogObject.title} by ${blogObject.author}`)
-    setNotificationType('successful')
-    setTimeout(() => {
-      setNotification(null)
-    }, 5000)
+      setNotification(`a new blog ${blogObject.title} by ${blogObject.author}`)
+      setNotificationType('successful')
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    } catch (exception) {
+      setNotification(`Incomplete blog post`)
+      setNotificationType('unsuccessful')
+
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   const handleLogin = async (event) => {
@@ -94,22 +104,13 @@ const App = () => {
     />
   )
 
-  const blogForm = () => {
-    const hideWhenVisible = { display: blogFormVisible ? 'none' : '' }
-    const showWhenVisible = { display: blogFormVisible ? '' : 'none' }
+  const blogFormRef = React.createRef()
 
-    return (
-      <div>
-        <div style={hideWhenVisible}>
-          <button onClick={() => setBlogFormVisible(true)}>new note</button>
-        </div>
-        <div style={showWhenVisible}>
-          <BlogForm createBlog={addBlog} />
-          <button onClick={() => setBlogFormVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
+  const blogForm = () => (
+    <Togglable buttonLabel="create new note" ref={blogFormRef}>
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
+  )
 
   return (
     <>
