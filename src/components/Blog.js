@@ -1,15 +1,7 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLikes }) => {
+const Blog = ({ blog, onUpdateBlogLikes, onDeleteBlog, loginUser }) => {
   const [visible, setVisible] = useState(true)
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  }
 
   const toggle = () => {
     setVisible(!visible)
@@ -18,8 +10,9 @@ const Blog = ({ blog, handleLikes }) => {
   const label = visible ? 'view' : 'hide'
 
   const { title, author, url, likes } = blog
+
   return (
-    <div style={blogStyle}>
+    <div className="blogStyle">
       {visible ? (
         <div>
           {title} {author} <button onClick={toggle}>{label}</button>
@@ -31,9 +24,17 @@ const Blog = ({ blog, handleLikes }) => {
           </div>
           <div>{url}</div>
           <div>
-            likes: {likes} <button onClick={handleLikes}>like</button>
+            likes: {likes} <button onClick={onUpdateBlogLikes}>like</button>
           </div>
-          {blog.user.name}
+          <div>Creator: {blog.user.name}</div>
+          {blog.user.username === loginUser && (
+            <button
+              className="remove-btn"
+              onClick={() => onDeleteBlog(blog.id)}
+            >
+              remove
+            </button>
+          )}
         </div>
       )}
     </div>

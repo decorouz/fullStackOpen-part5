@@ -9,7 +9,7 @@ const Notification = ({ message, type }) => {
     marginBottom: 10,
   }
 
-  if (message === null) {
+  if (!message) {
     return null
   }
 

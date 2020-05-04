@@ -9,7 +9,6 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-
   const [notificationType, setNotificationType] = useState('')
   const [notification, setNotification] = useState(null)
   const [user, setUser] = useState(null)
@@ -58,7 +57,7 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('LoggedBloglistappUser')
 
-    setNotification(`You've successfully logout`)
+    setNotification(`You've successfully logout `)
     setNotificationType('successful')
     setTimeout(() => {
       setNotification(null)
@@ -69,17 +68,19 @@ const App = () => {
 
   const handleCreateNewBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
+
     try {
       const savedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(savedBlog))
+      getBlogs()
 
-      setNotification(`a new blog ${blogObject.title} by ${blogObject.author}`)
+      setNotification(`A new blog by ${user.username} was added`)
       setNotificationType('successful')
       setTimeout(() => {
         setNotification(null)
       }, 5000)
     } catch (exception) {
-      setNotification(`Incomplete blog post`)
+      setNotification(`${exception.response.data.error}`)
       setNotificationType('unsuccessful')
 
       setTimeout(() => {
@@ -98,41 +99,53 @@ const App = () => {
 
       setBlogs(blogs.map((blog) => (blog.id === result.id ? result : blog)))
     } catch (exception) {
-      console.log(exception)
+      setNotification(`${exception.response.data.error}`)
     }
   }
 
+  const handleDeleteBlog = async (id) => {
+    if (
+      window.confirm(
+        `Remove blog. You're not going to need it! by ${user.name}`
+      )
+    ) {
+      try {
+        await blogService.remove(id)
+        setBlogs(blogs.filter((b) => b.id !== id))
+      } catch (exception) {
+        setNotification(`${exception.response.data.error}`)
+      }
+    }
+  }
   const blogFormRef = React.createRef()
-
-  const blogForm = () => (
-    <Togglable buttonLabel="create new note" ref={blogFormRef}>
-      <BlogForm createBlog={handleCreateNewBlog} />
-    </Togglable>
-  )
 
   return (
     <>
       <Notification message={notification} type={notificationType} />
 
       {!user ? (
-        <div>
-          <LoginForm handleSubmit={handleLogin} />
-        </div>
+        <LoginForm handleSubmit={handleLogin} />
       ) : (
         <>
           <h2>blogs</h2>
           <p>
-            {user.name} logged in <button onClick={handleLogout}>logout</button>
+            {user.name}, you're logged in
+            <button onClick={handleLogout}>logout</button>
           </p>
-          {blogForm()}
-
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLikes={() => handleUpdateBlog(blog.id)}
-            />
-          ))}
+          <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+            <BlogForm createBlog={handleCreateNewBlog} />
+          </Togglable>
+          {blogs
+            .sort((a, b) => b.likes - a.likes)
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                onUpdateBlogLikes={() => handleUpdateBlog(blog.id)}
+                onDeleteBlog={handleDeleteBlog}
+                loginUser={user.username}
+              />
+            ))}
         </>
       )}
     </>
