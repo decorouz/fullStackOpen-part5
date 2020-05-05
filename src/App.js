@@ -141,7 +141,7 @@ const App = () => {
               <Blog
                 key={blog.id}
                 blog={blog}
-                onUpdateBlogLikes={() => handleUpdateBlog(blog.id)}
+                onUpdateBlogLikes={handleUpdateBlog}
                 onDeleteBlog={handleDeleteBlog}
                 loginUser={user.username}
               />
