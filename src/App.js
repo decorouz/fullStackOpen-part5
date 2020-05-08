@@ -57,7 +57,7 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('LoggedBloglistappUser')
 
-    setNotification('You\'ve successfully logout ')
+    setNotification("You've successfully logout ")
     setNotificationType('successful')
     setTimeout(() => {
       setNotification(null)
@@ -129,7 +129,7 @@ const App = () => {
         <>
           <h2>blogs</h2>
           <p>
-            {user.name}, you're logged in
+            {user.name}, You are logged in
             <button onClick={handleLogout}>logout</button>
           </p>
           <Togglable buttonLabel="create new blog" ref={blogFormRef}>
