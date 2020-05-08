@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from '../components/Blog'
 
 test('blog default render', () => {
@@ -17,4 +17,20 @@ test('blog default render', () => {
   const div = component.container.querySelector('.blog')
   expect(div).toHaveTextContent('Ego is the enemy')
   expect(div).toHaveTextContent('Ryan Holiday')
+})
+
+test('clicking the view button shows url and numbers of likes', () => {
+  const blog = {
+    title: 'Ego is the enemy',
+    author: 'Ryan Holiday',
+    url: 'http;//www.mr.com',
+    likes: 30,
+  }
+
+  const mockHandler = jest.fn()
+
+  const component = render(<Blog blogStyle={blog} toggle={mockHandler} />)
+
+  const button = component.getByText('view')
+  fireEvent.click(button)
 })

@@ -3,42 +3,50 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, onUpdateBlogLikes, onDeleteBlog, loginUser }) => {
-  const [visible, setVisible] = useState(true)
+  const [view, setView] = useState(false)
 
-  const toggle = () => {
-    setVisible(!visible)
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    paddingBottom: 5,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5,
   }
 
-  const label = visible ? 'view' : 'hide'
+  const toggle = () => {
+    setView(!view)
+  }
 
-  const { title, author, url, likes } = blog
+  const label = view ? 'hide' : 'view'
+
+  const showMoreView = () => (
+    <div>
+      <a target="_blank" rel="noopener noreferrer" href={blog.url}>
+        {blog.url}
+      </a>
+      <br />
+      <span>likes: </span>
+      {blog.likes}
+      <button onClick={() => onUpdateBlogLikes(blog.id)}>like</button>
+      <br />
+      Creator: {blog.user.name}
+      {blog.user.username === loginUser && (
+        <button className="remove-btn" onClick={() => onDeleteBlog(blog.id)}>
+          remove
+        </button>
+      )}
+    </div>
+  )
 
   return (
-    <div className="blogStyle">
-      {visible ? (
-        <div className="blog">
-          {title} {author}
-          <button onClick={toggle}>{label}</button>
-        </div>
-      ) : (
-        <div>
-          <div>
-            {title} {author} <button onClick={toggle}>{label}</button>
-          </div>
-          <div>{url}</div>
-          <span>likes: {likes} </span>
-          <button onClick={() => onUpdateBlogLikes(blog.id)}>like</button>
-          <div>Creator: {blog.user.name}</div>
-          {blog.user.username === loginUser && (
-            <button
-              className="remove-btn"
-              onClick={() => onDeleteBlog(blog.id)}
-            >
-              remove
-            </button>
-          )}
-        </div>
-      )}
+    <div style={blogStyle} className="blog">
+      <div className="blog">
+        {blog.title} {blog.author}
+        <button onClick={toggle}>{label}</button>
+      </div>
+
+      {view && showMoreView()}
     </div>
   )
 }

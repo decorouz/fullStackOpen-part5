@@ -6,8 +6,6 @@ const Togglable = React.forwardRef((props, ref) => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  //Create a function to implement the toggling effect
-
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -30,5 +28,7 @@ const Togglable = React.forwardRef((props, ref) => {
     </div>
   )
 })
+
+Togglable.displayName = 'Togglable'
 
 export default Togglable
