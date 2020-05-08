@@ -86,8 +86,6 @@ test('if like button is clicked twice, the event handler the component received 
   const viewButton = component.getByText('view')
   fireEvent.click(viewButton)
 
-  component.debug()
-
   const likeButton = component.container.querySelector('.like-button')
   fireEvent.click(likeButton)
   expect(mockHandler.mock.calls.length).toBe(1)
