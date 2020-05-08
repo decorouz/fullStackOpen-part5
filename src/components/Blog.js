@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+
 import PropTypes from 'prop-types'
 
 const Blog = ({ blog, onUpdateBlogLikes, onDeleteBlog, loginUser }) => {
@@ -15,8 +16,9 @@ const Blog = ({ blog, onUpdateBlogLikes, onDeleteBlog, loginUser }) => {
   return (
     <div className="blogStyle">
       {visible ? (
-        <div>
-          {title} {author} <button onClick={toggle}>{label}</button>
+        <div className="blog">
+          {title} {author}
+          <button onClick={toggle}>{label}</button>
         </div>
       ) : (
         <div>
@@ -48,4 +50,5 @@ Blog.propTypes = {
   loginUser: PropTypes.string.isRequired,
 }
 
+Blog.displayName = 'Blog'
 export default Blog
