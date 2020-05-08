@@ -57,3 +57,40 @@ test('clicking the view button shows url and numbers of likes', () => {
   expect(div).toHaveTextContent(blog.url)
   expect(div).toHaveTextContent(blog.likes)
 })
+
+test('if like button is clicked twice, the event handler the component received as props is called twice', () => {
+  const blog = {
+    title: 'Ego is the enemy',
+    author: 'Ryan Holiday',
+    url: 'https://ryanholiday.net/about/',
+    likes: 4,
+    user: {
+      username: 'petter',
+      name: 'james',
+    },
+  }
+
+  const loginUser = 'james'
+
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <Blog
+      blog={blog}
+      loginUser={loginUser}
+      onUpdateBlogLikes={mockHandler}
+      onDeleteBlog={() => {}}
+    />
+  )
+
+  const viewButton = component.getByText('view')
+  fireEvent.click(viewButton)
+
+  component.debug()
+
+  const likeButton = component.container.querySelector('.like-button')
+  fireEvent.click(likeButton)
+  expect(mockHandler.mock.calls.length).toBe(1)
+  fireEvent.click(likeButton)
+  expect(mockHandler.mock.calls.length).toBe(2)
+})

@@ -28,7 +28,12 @@ const Blog = ({ blog, onUpdateBlogLikes, onDeleteBlog, loginUser }) => {
       <br />
       <span>likes: </span>
       {blog.likes}
-      <button onClick={() => onUpdateBlogLikes(blog.id)}>like</button>
+      <button
+        className="like-button"
+        onClick={() => onUpdateBlogLikes(blog.id)}
+      >
+        like
+      </button>
       <br />
       Creator: {blog.user.name}
       {blog.user.username === loginUser && (
@@ -42,7 +47,9 @@ const Blog = ({ blog, onUpdateBlogLikes, onDeleteBlog, loginUser }) => {
   return (
     <div style={blogStyle} className="blog">
       {blog.title} {blog.author}
-      <button onClick={toggle}>{label}</button>
+      <button className="toggle-button" onClick={toggle}>
+        {label}
+      </button>
       {view && showMoreView()}
     </div>
   )
