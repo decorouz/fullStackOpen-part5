@@ -54,4 +54,23 @@ describe('Blog app', function () {
       cy.get('#alert').should('contain', 'A new blog by ademide was added')
     })
   })
+
+  describe('When log in and creates a new blog', function () {
+    beforeEach(function () {
+      cy.login({ username: 'ademide', password: 'haute' })
+      cy.createBlog({
+        title: 'Testing like functionality with cypress',
+        authot: ' Ademide',
+        url: 'http://localhost.com',
+      })
+    })
+
+    it('A blog can be liked', function () {
+      cy.contains('Testing like functionality with cypress')
+        .get('#showView')
+        .click()
+      cy.get('#like-btn').click()
+      cy.contains('likes: 1')
+    })
+  })
 })
