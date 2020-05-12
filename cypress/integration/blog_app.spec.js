@@ -6,7 +6,7 @@ describe('Blog app', function () {
       username: 'ademide',
       password: 'haute',
     }
-    cy.request('POST', 'http://localhost:3003/api/users', user)
+    cy.createUser(user)
     cy.visit('http://localhost:3000')
   })
 
@@ -36,6 +36,22 @@ describe('Blog app', function () {
 
       cy.get('html').should('not.contain', 'Adeleye, You are logged in')
       cy.get('html').should('not.contain', 'logout')
+    })
+  })
+
+  describe('When Logged in', function () {
+    beforeEach(function () {
+      cy.login({ username: 'ademide', password: 'haute' })
+    })
+
+    it('A blog can be created', function () {
+      cy.contains('create new blog').click()
+      cy.get('#title').type('a blog created by cypress')
+      cy.get('#author').type('adeleye')
+      cy.get('#url').type('http://localhost:3000')
+      cy.get('#create-btn').click()
+      cy.contains('a blog created by cypress')
+      cy.get('#alert').should('contain', 'A new blog by ademide was added')
     })
   })
 })
