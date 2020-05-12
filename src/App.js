@@ -57,7 +57,7 @@ const App = () => {
     event.preventDefault()
     window.localStorage.removeItem('LoggedBloglistappUser')
 
-    setNotification("You've successfully logout ")
+    setNotification('successfully logout')
     setNotificationType('successful')
     setTimeout(() => {
       setNotification(null)
